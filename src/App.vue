@@ -1,30 +1,78 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <nav class="nav" :class="{'change_size': !buttonIsPulsed}">
+    <img src="./assets/bars.svg" alt="" class="menu" @click="swapClasses()">
+
+    <div class="nav__div" :class="{'hide': !buttonIsPulsed}" @click="swapClasses()">
+      <router-link :to="{name: 'profile'}" class="router" >Perfil</router-link>
+      <router-link :to="{name: 'budget'}" class="router">Presupuesto</router-link>
+      <router-link :to="{name: 'transactions'}" class="router">Transacciones</router-link>
+      <router-link :to="{name: 'calculators'}" class="router">Calculadoras de intereses</router-link>
+    </div>
   </nav>
   <router-view/>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+<style lang="scss" scoped>
+  @import './scss/colors';
+  .menu{
+    margin: 15px 15px;
+    height: 3.5rem;
+  }
+  .nav{
+    display: block;
+    position: absolute;
+    top: 0;
+    background-color: $md-theme-light-primary;
+    height: 11vh;
+    width: 100%;
+  }
+  .nav__div{
+    display: flex;
+    height: 4rem;
+    width: 60%;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .router{
+    display: flex;
+    width: 100%;
+    height: 5rem;
+    justify-content: center;
+    align-items: center;
+    color: $md-theme-light-on-primary; 
+    text-decoration: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: clamp(16px, 1.7vw, 24px);
+  }
+  @media (max-width: 580px){
+    .nav{
+      background-color: $md-theme-light-primary;
+      height: 70vh;
+      z-index: 1000;
+    }
+    .nav__div{
+    display: flex;
+    height: 80%;
+    width: 100%;
+    flex-direction: column;
+    justify-content: baseline;
+    align-items: center;
+    }
+    .hide{
+    visibility: hidden;
+  }
+    .change_size{
+      height: 11vh;
     }
   }
-}
+  
 </style>
+
+<script setup>
+import { ref } from 'vue'
+  const buttonIsPulsed = ref(true)
+  function swapClasses() {
+    console.log("swap");
+    buttonIsPulsed.value = !buttonIsPulsed.value
+  }
+</script>

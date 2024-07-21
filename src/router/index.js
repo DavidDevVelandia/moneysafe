@@ -1,19 +1,57 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import ProfileView from '@/views/ProfileView.vue'
+import BudgetView from '@/views/BudgetView.vue'
+import TransactionsView from '@/views/TransactionsView.vue'
+import CalculatorsView from '@/views/CalculatorsView.vue'
+import SimpleInterestComp from '@/components/calculators/SimpleInterestComp.vue'
+import CompoundInterestComp from '@/components/calculators/CompoundInterestComp.vue'
+import ExpensesComp from '@/components/budget/ExpensesComp.vue'
+import IncomesComp from '@/components/budget/IncomesComp.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    name: 'profile',
+    component: ProfileView
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/budget',
+    name: 'budget',
+    component: BudgetView,
+    children: [
+      {
+        path: 'expenses',
+        name: 'expenses',
+        component: ExpensesComp
+      },
+      {
+        path: 'incomes',
+        name: 'incomes',
+        component: IncomesComp
+      }
+    ]
+  },
+  {
+    path: '/transactions',
+    name: 'transactions',
+    component: TransactionsView
+  },
+  {
+    path: '/calculators',
+    name: 'calculators',
+    component: CalculatorsView,
+    children: [
+      {
+        path: 'simple-interest',
+        name: 'simple-interest',
+        component: SimpleInterestComp
+      },
+      {
+        path: 'compound-interest',
+        name: 'compound-interest',
+        component: CompoundInterestComp
+      }
+    ]
   }
 ]
 
