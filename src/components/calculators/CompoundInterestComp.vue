@@ -73,10 +73,10 @@
 }
 #initialBudget {
   width: 20rem;
-  height: 4rem;
+  height: 2.5rem;
 }
 #paymentPeriod {
-  height: 5rem;
+  height: 2.5rem;
 }
 #input-container-payment {
   margin: 0 auto;

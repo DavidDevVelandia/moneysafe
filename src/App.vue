@@ -23,7 +23,7 @@
     position: absolute;
     top: 0;
     background-color: $md-theme-light-primary;
-    height: 11vh;
+    height: 12rem;
     width: 100%;
   }
   .nav__div{
@@ -47,7 +47,7 @@
   @media (max-width: 580px){
     .nav{
       background-color: $md-theme-light-primary;
-      height: 70vh;
+      height: 35rem;
       z-index: 1000;
     }
     .nav__div{
@@ -62,7 +62,7 @@
     visibility: hidden;
   }
     .change_size{
-      height: 11vh;
+      height: 5.5rem;
     }
   }
   
