@@ -42,11 +42,12 @@
     }
 }
 .AddCategoryWindow{
-
-    display: block;
+    display: flex;
     position: absolute;
-    width: 80vw;
-    top: 10rem;
+    width: 100vw;
+    height: 100%;
+    top: 0;
+    z-index: 1100;
 }
 </style>
 <script setup>
