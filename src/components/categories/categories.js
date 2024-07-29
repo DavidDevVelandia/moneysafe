@@ -8,6 +8,11 @@ let categories = [
         name: "Juan",
         image: "not now",
         id: generateUniqueId()
+    },
+    {
+        name: "add",
+        image: "not now",
+        id: generateUniqueId()
     }
 ];
 
