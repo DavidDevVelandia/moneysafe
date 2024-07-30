@@ -8,7 +8,18 @@
 
 </style>
 <script setup>
-//import { AddCategory } from '../categories/categories';
+import { ref } from "vue"
+import { defineEmits } from "vue"
+import { AddCategory, ShowCategories } from "../categories/categories";
+
+const emit = defineEmits(
+    ["category-added"]
+)
+const name = ref("")
     function handleClick(){
+        AddCategory(name.value, "none")
+        console.log("pressed")
+        console.log(ShowCategories())
+        emit('category-added');
     }
 </script>

@@ -1,4 +1,5 @@
-let categories = [
+import { ref } from "vue"
+const categories = ref([
     {
         name: "David",
         image: "not now",
@@ -14,7 +15,7 @@ let categories = [
         image: "not now",
         id: generateUniqueId()
     }
-];
+]);
 
 function createCategory(name, image){
     return {
@@ -25,8 +26,9 @@ function createCategory(name, image){
 }
 
 export function AddCategory(name, image){
-    categories.push(createCategory(name, image))
+    categories.value.splice(categories.value.length -1, 0, createCategory(name, image))
 }
+
 export function ShowCategories(){
     return categories
 }

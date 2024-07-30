@@ -8,7 +8,7 @@
                 <p>{{ category.image }}</p>
             </button>
         </div>
-        <CategoryComp v-if="categoryIsAdded"/>
+        <CategoryComp v-if="categoryIsAdded" @category-added="refreshCategories"/>
         <button>confirm</button>
     </div>
 </div>
@@ -25,7 +25,8 @@
 }
 .item{
     display: block;
-    height: 80%;
+    width: 4rem;
+    height: 4rem;
 }
 .window{
     box-sizing: border-box;
@@ -34,17 +35,20 @@
     justify-content: space-between;
     width: 40vw;
     min-width: 300px;
-    height: 20rem;
+    height: 80vh;
     padding: 1rem;
     background-color: $md-theme-light-on-primary;
     border: 3px solid $md-theme-light-tertiary;
 }
 .categories-container{
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    height: 5rem;
+    height: fit-content;
+    max-height: 400px;
+    overflow-y: scroll;
     width: 100%;
     background-color: #787680;
 }
@@ -66,5 +70,9 @@ function handleClick(category){
     else{
         categoryIsAdded.value = false
     }
+}
+function refreshCategories() {
+    console.log("refreshed")
+  categories.value = ShowCategories().value;
 }
 </script>
