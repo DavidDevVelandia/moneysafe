@@ -47,6 +47,7 @@
     justify-content: space-around;
     align-items: center;
     height: fit-content;
+    min-height: 80px;
     max-height: 400px;
     overflow-y: scroll;
     width: 100%;
