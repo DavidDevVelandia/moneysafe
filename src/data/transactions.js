@@ -4,4 +4,3 @@ const transactions = {
     category: "",
     date: ""
 }
-const list1 = Object.assign({}, transactions)

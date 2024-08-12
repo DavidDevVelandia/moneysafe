@@ -5,8 +5,8 @@
         <p class="pesoSymbol">$</p>
     </div>
     <p class="text">Categorías</p>
-    <button @click.prevent="ShowWindow">+</button>
-    <AddCategoryComp v-if="isShown" class="AddCategoryWindow"/>
+    <button @click.prevent="changeWindow">+</button>
+    <AddCategoryComp v-if="isShown" class="AddCategoryWindow" @confirmed="changeWindow"/>
 </template>
 <style lang="scss" scoped>
 @import "./../../scss/colors";
@@ -56,7 +56,7 @@ import AddCategoryComp from "./AddCategoryComp.vue"
 //import { AddCategory } from "../categories/categories";
 const expense = ref(0)
 const isShown = ref(true)
-function ShowWindow(){
+function changeWindow(){
     isShown.value = !isShown.value
 }
 </script>

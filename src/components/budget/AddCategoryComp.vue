@@ -9,7 +9,7 @@
             </button>
         </div>
         <CategoryComp v-if="categoryIsAdded" @category-added="refreshCategories"/>
-        <button>confirm</button>
+        <button @click.prevent="confirm">confirm</button>
     </div>
 </div>
 </template>
@@ -55,12 +55,18 @@
 }
 </style>
 <script setup>
+import { defineEmits } from "vue"
 import { ref } from "vue";
-//import AddCategory from "./../categories/categories"
 import { ShowCategories } from "../categories/categories";
 import CategoryComp from "./CategoryComp.vue"
+import { changeName } from "@/data/selectedComponent";
+
 const categories = ref(ShowCategories())
 const categoryIsAdded = ref(true)
+const emit = defineEmits(
+    ["confirmed"]
+)
+
 console.log(categories.value[0].name)
 
 function handleClick(category){
@@ -69,11 +75,16 @@ function handleClick(category){
         categoryIsAdded.value = !categoryIsAdded.value
     }
     else{
+        changeName(category)
         categoryIsAdded.value = false
     }
 }
+
 function refreshCategories() {
     console.log("refreshed")
-  categories.value = ShowCategories().value;
+    categories.value = ShowCategories().value;
+}
+function confirm(){
+    emit("confirmed")
 }
 </script>
