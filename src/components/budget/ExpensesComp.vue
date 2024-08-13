@@ -6,7 +6,9 @@
     </div>
     <p class="text">Categorías</p>
     <button @click.prevent="changeWindow">+</button>
-    <AddCategoryComp v-if="isShown" class="AddCategoryWindow" @confirmed="changeWindow"/>
+    <AddCategoryComp v-if="isShown" class="AddCategoryWindow" @confirmed="(category)=>{changeWindow(); updateCategory(category)}"/>
+    <p>{{ component.name }}</p>
+    <button @click.prevent="handleSend">Énviar</button>
 </template>
 <style lang="scss" scoped>
 @import "./../../scss/colors";
@@ -53,10 +55,54 @@
 <script setup>
 import { ref } from "vue";
 import AddCategoryComp from "./AddCategoryComp.vue"
-//import { AddCategory } from "../categories/categories";
+import { showName } from "@/data/selectedComponent";
+import { addTransactionExpense, showTransactionExpense } from "@/data/transactions";
 const expense = ref(0)
-const isShown = ref(true)
+const component = ref("")
+const isShown = ref(false)
+const id = ref(0)
+const date = ref({})
 function changeWindow(){
     isShown.value = !isShown.value
+}
+function updateCategory(){
+    console.log("confirmed");
+    component.value = showName()
+}
+function handleSend(){
+    id.value = generateUniqueId()
+    date.value = getFormattedDateTime()
+    addTransactionExpense(expense.value, component.value, date.value.formattedString, id.value)
+    console.log("sent")
+    console.log(showTransactionExpense())
+}
+
+function getFormattedDateTime() {
+    const now = new Date();
+
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = String(now.getFullYear()).slice(-2);
+
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+
+    const formattedDateTime = `${day}/${month}/${year} ${hours}:${minutes}`;
+    return {
+        dateObject: now,          
+        formattedString: formattedDateTime
+    };
+}
+
+function generateUniqueId() {
+    const timestamp = Date.now();
+ 
+    const randomNum = Math.floor(Math.random() * 100000);
+    
+    const randomString = randomNum.toString().padStart(5, '0');
+    
+    const uniqueId = `${timestamp}-${randomString}`;
+    
+    return uniqueId;
 }
 </script>

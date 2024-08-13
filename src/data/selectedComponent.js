@@ -10,16 +10,25 @@ export function changeName(prop) {
         throw new Error('El argumento prop debe ser un objeto.');
     }
 
-    const hasValidName = Object.prototype.hasOwnProperty.call(prop, 'name') && typeof prop.name === 'string';
-    const hasValidImage = Object.prototype.hasOwnProperty.call(prop, 'image') && typeof prop.image === 'string';
-    const hasValidId = Object.prototype.hasOwnProperty.call(prop, 'id') && typeof prop.id === 'number';
+    const hasValidName = Object.prototype.hasOwnProperty.call(prop, 'name');
+    const hasValidImage = Object.prototype.hasOwnProperty.call(prop, 'image');
+    const hasValidId = Object.prototype.hasOwnProperty.call(prop, 'id');
 
     // Validar todas las propiedades
     if (hasValidName && hasValidImage && hasValidId) {
         component.name = prop.name;
         component.image = prop.image;
         component.id = prop.id;
+
+        console.log(component.id+" "+component.name)
     } else {
         console.log('El objeto prop no tiene las propiedades necesarias o sus tipos son incorrectos.');
+    }
+}
+export function showName(){
+    return {
+        name: component.name,
+        image: component.image,
+        id: component.id
     }
 }
