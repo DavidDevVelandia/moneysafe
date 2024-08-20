@@ -22,7 +22,7 @@
 <script setup>
 import { ref } from "vue"
 import { defineEmits } from "vue"
-import { AddCategory, ShowCategories } from "../categories/categories";
+import { AddCategory } from "../../data/categories/categories";
 
 const emit = defineEmits(
     ["category-added"]
@@ -31,7 +31,6 @@ const name = ref("")
 function handleClick(){
     if(name.value !== ""){
         AddCategory(name.value, "none")
-        console.log(ShowCategories())
         emit('category-added');
     }
 }

@@ -57,7 +57,7 @@
 <script setup>
 import { defineEmits } from "vue"
 import { ref } from "vue";
-import { ShowCategories } from "../categories/categories";
+import { ShowCategories } from "../../data/categories/categories";
 import CategoryComp from "./CategoryComp.vue"
 import { changeName } from "@/data/selectedComponent";
 
