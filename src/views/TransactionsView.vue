@@ -1,229 +1,104 @@
 <template>
-  <div class="chart-container">
-    <canvas ref="expenseAmountChartCanvas"></canvas>
-  </div>
-  <div class="chart-container">
-    <canvas ref="incomeAmountChartCanvas"></canvas>
-  </div>
-  <div class="chart-container">
-    <canvas ref="totalAmountChartCanvas"></canvas>
+  <div class="container">
+    <nav class="tabs">
+      <button 
+        v-for="tab in tabs" 
+        :key="tab" 
+        :class="{ active: selectedTab === tab }" 
+        @click="selectedTab = tab"
+      >
+        {{ tab }}
+      </button>
+    </nav>
+
+    <div class="filter-options">
+      <button 
+        v-for="filter in filters" 
+        :key="filter" 
+        :class="{ active: selectedFilter === filter }" 
+        @click="selectedFilter = filter"
+      >
+        {{ filter }}
+      </button>
+    </div>
+
+    <div class="content">
+      <GeneralChart v-if="selectedTab === 'General'" :filter="selectedFilter" />
+      <ExpenseList v-if="selectedTab === 'Gastos'" :filter="selectedFilter" />
+      <IncomeList v-if="selectedTab === 'Ingresos'" :filter="selectedFilter" />
+    </div>
   </div>
 </template>
 
-<style scoped>
-.chart-container {
-  margin-top: 30vh;
-  height: 400px;
-  width: 80vw;
+<script setup>
+import { ref } from 'vue';
+import GeneralChart from '@/components/transactionsHistory/GeneralChart.vue';
+import ExpenseList from '@/components/transactionsHistory/ExpenseList.vue';
+import IncomeList from '@/components/transactionsHistory/IncomeList.vue';
+
+const selectedTab = ref('General');
+const selectedFilter = ref('by year');
+
+const tabs = ['General', 'Gastos', 'Ingresos'];
+const filters = ['by year', 'by month', 'by week', 'by day'];
+</script>
+
+<style lang="scss">
+@import "@/scss/_colors.scss";
+
+.container {
+  margin-top: 10rem;
+  padding: 1rem;
+  background-color: $md-theme-light-surface;
+  border-radius: 10px;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  background-color: $md-theme-light-primary-container;
+  border-radius: 10px;
+  padding: 0.5rem;
+
+  button {
+    flex: 1;
+    padding: 0.5rem;
+    background: transparent;
+    border: none;
+    font-weight: bold;
+    color: $md-theme-light-on-primary-container;
+    text-transform: uppercase;
+    cursor: pointer;
+
+    &.active {
+      color: $md-theme-light-primary;
+      border-bottom: 2px solid $md-theme-light-primary;
+    }
+  }
+}
+
+.filter-options {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1rem;
+
+  button {
+    flex: 1;
+    padding: 0.5rem;
+    background: transparent;
+    border: none;
+    color: $md-theme-light-outline;
+    cursor: pointer;
+
+    &.active {
+      color: $md-theme-light-primary;
+      border-bottom: 2px solid $md-theme-light-primary;
+      font-weight: bold;
+    }
+  }
+}
+
+.content {
+  margin-top: 1rem;
 }
 </style>
-
-<script setup>
-import { ref, onMounted, watch } from 'vue';
-import { Chart as ChartJS, LineController, LineElement, PointElement, CategoryScale, LinearScale, Title, Tooltip, Legend } from 'chart.js';
-import { showTransactionExpense, showTransactionIncome } from '@/data/transactions';
-
-// Registrar los componentes de Chart.js
-ChartJS.register(LineController, LineElement, PointElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
-
-const expenseAmountChartCanvas = ref(null);
-const incomeAmountChartCanvas = ref(null);
-const totalAmountChartCanvas = ref(null);
-
-let expenseAmountChartInstance = null;
-let incomeAmountChartInstance = null;
-let totalAmountChartInstance = null;
-
-const transactionsExpenses = showTransactionExpense();
-const transactionsIncomes = showTransactionIncome();
-
-function calculateTransactionAmounts() {
-  let expenseAmounts = [];
-  let incomeAmounts = [];
-  let totalAmounts = [];
-  let expenseCategories = [];
-  let incomeCategories = [];
-
-  transactionsExpenses.value.forEach(transaction => {
-    expenseAmounts.push(transaction.expense);
-    expenseCategories.push(transaction.category.name); // Guardamos la categoría
-  });
-
-  transactionsIncomes.value.forEach(transaction => {
-    incomeAmounts.push(transaction.income);
-    incomeCategories.push(transaction.category.name); // Guardamos la categoría
-  });
-
-  // Calcular el total acumulado
-  const maxLength = Math.max(expenseAmounts.length, incomeAmounts.length);
-  for (let i = 0; i < maxLength; i++) {
-    const expense = expenseAmounts[i] || 0;
-    const income = incomeAmounts[i] || 0;
-    const previousTotal = totalAmounts[i - 1] || 0;
-    totalAmounts.push(previousTotal + income - expense);
-  }
-
-  return {
-    expenses: expenseAmounts,
-    incomes: incomeAmounts,
-    totals: totalAmounts,
-    expenseCategories,
-    incomeCategories,
-  };
-}
-
-// Crear y actualizar la gráfica de gastos
-function renderExpenseAmountChart() {
-  const amounts = calculateTransactionAmounts();
-  const labels = amounts.expenseCategories; // Usamos las categorías para las etiquetas
-  const data = amounts.expenses;
-
-  if (expenseAmountChartInstance) {
-    expenseAmountChartInstance.destroy();
-  }
-
-  expenseAmountChartInstance = new ChartJS(expenseAmountChartCanvas.value, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        {
-          label: 'Valor de Gastos',
-          borderColor: '#FF5733',
-          backgroundColor: '#FF5733',
-          data,
-          fill: false,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        x: {
-          title: {
-            display: true,
-            text: 'Categoría',
-          },
-        },
-        y: {
-          title: {
-            display: true,
-            text: 'Valor ($)',
-          },
-          beginAtZero: true,
-        },
-      },
-    },
-  });
-}
-
-// Crear y actualizar la gráfica de ingresos
-function renderIncomeAmountChart() {
-  const amounts = calculateTransactionAmounts();
-  const labels = amounts.incomeCategories; // Usamos las categorías para las etiquetas
-  const data = amounts.incomes;
-
-  if (incomeAmountChartInstance) {
-    incomeAmountChartInstance.destroy();
-  }
-
-  incomeAmountChartInstance = new ChartJS(incomeAmountChartCanvas.value, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        {
-          label: 'Valor de Ingresos',
-          borderColor: '#34A853',
-          backgroundColor: '#34A853',
-          data,
-          fill: false,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        x: {
-          title: {
-            display: true,
-            text: 'Categoría',
-          },
-        },
-        y: {
-          title: {
-            display: true,
-            text: 'Valor ($)',
-          },
-          beginAtZero: true,
-        },
-      },
-    },
-  });
-}
-
-// Crear y actualizar la gráfica del total acumulado
-function renderTotalAmountChart() {
-  const amounts = calculateTransactionAmounts();
-  const labels = amounts.expenseCategories; // Usamos las categorías de los gastos para las etiquetas
-  const data = amounts.totals;
-
-  if (totalAmountChartInstance) {
-    totalAmountChartInstance.destroy();
-  }
-
-  totalAmountChartInstance = new ChartJS(totalAmountChartCanvas.value, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        {
-          label: 'Total Acumulado ($)',
-          borderColor: '#5347D8',
-          backgroundColor: '#5347D8',
-          data,
-          fill: false,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        x: {
-          title: {
-            display: true,
-            text: 'Categoría',
-          },
-        },
-        y: {
-          title: {
-            display: true,
-            text: 'Valor ($)',
-          },
-          beginAtZero: true,
-        },
-      },
-    },
-  });
-}
-
-
-onMounted(() => {
-  renderExpenseAmountChart();
-  renderIncomeAmountChart();
-  renderTotalAmountChart();
-});
-
-watch(transactionsExpenses, () => {
-  renderExpenseAmountChart();
-  renderTotalAmountChart();
-});
-
-watch(transactionsIncomes, () => {
-  renderIncomeAmountChart();
-  renderTotalAmountChart();
-});
-</script>
