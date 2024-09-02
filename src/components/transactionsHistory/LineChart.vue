@@ -36,12 +36,20 @@ const chartOptions = {
   responsive: true,
   plugins: {
     legend: {
-      display: true,
+      display: false, // Desactiva la leyenda si no la necesitas
+    },
+    tooltip: {
+      enabled: true,
     },
     title: {
       display: true,
-      text: `Line Chart for ${props.type}`,
+      text: `${props.type}`,
     },
   },
+  interaction: {
+    intersect: false,
+    mode: 'index',
+  },
 };
+
 </script>

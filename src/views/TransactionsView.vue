@@ -37,10 +37,10 @@ import ExpenseList from '@/components/transactionsHistory/ExpenseList.vue';
 import IncomeList from '@/components/transactionsHistory/IncomeList.vue';
 
 const selectedTab = ref('General');
-const selectedFilter = ref('by year');
+const selectedFilter = ref('año');
 
 const tabs = ['General', 'Gastos', 'Ingresos'];
-const filters = ['by year', 'by month', 'by week', 'by day'];
+const filters = ['año', 'mes', 'semana', 'día'];
 </script>
 
 <style lang="scss">
