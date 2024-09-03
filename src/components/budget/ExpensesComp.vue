@@ -8,15 +8,31 @@
     <button @click.prevent="changeWindow">+</button>
     <AddCategoryComp v-if="isShown" class="AddCategoryWindow" @confirmed="(category)=>{changeWindow(); updateCategory(category)}"/>
     <p>{{ component.name }}</p>
-    <button @click.prevent="handleSend">Énviar</button>
+    <button @click.prevent="handleSend" class="btn">Énviar</button>
 </template>
 <style lang="scss" scoped>
+
 @import "./../../scss/colors";
+
 .inputContainer{
     width: 40vw;
     height: 4rem;
     margin: 0 auto;
     position: relative;
+}
+.btn{
+    display: block;
+    justify-content: center;
+    align-items: center;
+    border-radius: 40px;
+    margin: 4rem auto;
+    width: 10rem;
+    height: 3rem;
+    background-color: $md-theme-light-primary;
+    color: $md-theme-light-on-primary;
+    border-style: none;
+    text-decoration: none;
+    font-size: 2.4vh;
 }
 .text{
     display: block;
