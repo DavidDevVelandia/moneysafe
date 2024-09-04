@@ -1,12 +1,12 @@
 import { ref } from "vue"
 const categories = ref([
     {
-        name: "David",
+        name: "Comida",
         image: "not now",
         id: generateUniqueId()
     },
     {
-        name: "Juan",
+        name: "Servicios",
         image: "not now",
         id: generateUniqueId()
     },

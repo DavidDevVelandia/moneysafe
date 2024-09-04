@@ -5,9 +5,12 @@
         <p class="pesoSymbol">$</p>
     </div>
     <p class="text">Categorías</p>
-    <button @click.prevent="changeWindow">+</button>
+    <div class="categoryDiv">
+        <button @click.prevent="changeWindow" class="btnComponent">+</button>
+        <p>{{ component.name }}</p>
+    </div>
+    
     <AddCategoryComp v-if="isShown" class="AddCategoryWindow" @confirmed="(category)=>{changeWindow(); updateCategory(category)}"/>
-    <p>{{ component.name }}</p>
     <button @click.prevent="handleSend" class="btn">Énviar</button>
 </template>
 <style lang="scss" scoped>
@@ -19,6 +22,25 @@
     height: 4rem;
     margin: 0 auto;
     position: relative;
+}
+.categoryDiv{
+    display: flex;
+    margin: 0 auto;
+    width: 50%;
+    justify-content: space-around;
+}
+.btnComponent{
+    display: block;
+    justify-content: center;
+    align-items: center;
+    border-radius: 40px;
+    width: 3rem;
+    height: 3rem;
+    background-color: $md-theme-light-primary;
+    color: $md-theme-light-on-primary;
+    border-style: none;
+    text-decoration: none;
+    font-size: 2.4vh;
 }
 .btn{
     display: block;
