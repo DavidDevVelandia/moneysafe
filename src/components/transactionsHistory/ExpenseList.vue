@@ -7,14 +7,12 @@
 <script setup>
 import LineChart from '@/components/transactionsHistory/LineChart.vue';
 import { showTransactionExpense } from '@/data/transactions.js';
-import { ref, computed, watch, defineProps } from 'vue';
+import { computed, watch, defineProps } from 'vue';
 
 // Props
 const props = defineProps({
   filter: String,
 });
-
-const expenses = ref(showTransactionExpense().value);
 
 // Función para agrupar datos según el filtro
 function groupDataByFilter(data, filter) {
@@ -58,10 +56,13 @@ function groupDataByFilter(data, filter) {
 }
 
 // Computed para obtener los datos agrupados según el filtro
-const groupedExpenses = computed(() => groupDataByFilter(expenses.value, props.filter));
+const groupedExpenses = computed(() => {
+  const expenses = showTransactionExpense().value;
+  return groupDataByFilter(expenses, props.filter);
+});
 
-// Watch para actualizar cuando cambie el filtro
+// Watch para actualizar el computed value cuando cambie el filtro
 watch(() => props.filter, () => {
-  groupedExpenses.value = groupDataByFilter(expenses.value, props.filter);
+  groupedExpenses.value = groupDataByFilter(showTransactionExpense().value, props.filter);
 });
 </script>
