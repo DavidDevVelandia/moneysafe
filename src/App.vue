@@ -19,16 +19,17 @@
     height: 3.5rem;
   }
   .nav{
-    display: block;
+    display: flex;
     position: absolute;
     top: 0;
+    flex-direction: row;
     background-color: $md-theme-light-primary;
-    height: 12rem;
+    height: 5rem;
     width: 100%;
   }
   .nav__div{
     display: flex;
-    height: 4rem;
+    height: 5rem;
     width: 60%;
     justify-content: space-around;
     align-items: center;
