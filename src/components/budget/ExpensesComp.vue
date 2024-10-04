@@ -1,7 +1,7 @@
 <template>
-    <p class="text">Valor del gasto</p>
+    <p class="text title">Valor del gasto</p>
     <div class="inputContainer">
-        <input type="number" class="inputNumber" v-model.number="expense">
+        <input type="number" class="inputNumber" v-model.number="expense" />
         <p class="pesoSymbol">$</p>
     </div>
     <p class="text">Categorías</p>
@@ -9,27 +9,34 @@
         <button @click.prevent="changeWindow" class="btnComponent">+</button>
         <p>{{ component.name }}</p>
     </div>
-    
-    <AddCategoryComp v-if="isShown" class="AddCategoryWindow" @confirmed="(category)=>{changeWindow(); updateCategory(category)}"/>
+
+    <!-- Mostrar mensaje de error si los campos están vacíos o no son válidos -->
+    <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+
+    <AddCategoryComp v-if="isShown" class="AddCategoryWindow" @confirmed="(category) => { changeWindow(); updateCategory(category) }" />
     <button @click.prevent="handleSend" class="btn">Énviar</button>
 </template>
-<style lang="scss" scoped>
 
+<style lang="scss" scoped>
 @import "./../../scss/colors";
 
-.inputContainer{
+.inputContainer {
     width: 40vw;
     height: 4rem;
     margin: 0 auto;
     position: relative;
 }
-.categoryDiv{
+
+.categoryDiv {
     display: flex;
+    flex-direction: column;
     margin: 0 auto;
     width: 50%;
     justify-content: space-around;
+    align-items: center;
 }
-.btnComponent{
+
+.btnComponent {
     display: block;
     justify-content: center;
     align-items: center;
@@ -41,8 +48,10 @@
     border-style: none;
     text-decoration: none;
     font-size: 2.4vh;
+    margin: 0 auto;
 }
-.btn{
+
+.btn {
     display: block;
     justify-content: center;
     align-items: center;
@@ -56,18 +65,37 @@
     text-decoration: none;
     font-size: 2.4vh;
 }
-.text{
+
+.btn:hover {
+    background-color: #6154db;
+}
+
+.btn:active {
+    background-color: #8076d8;
+}
+
+.btnComponent:hover {
+    background-color: #6154db;
+}
+
+.btnComponent:active {
+    background-color: #8076d8;
+}
+
+.text {
     display: block;
-    width: 6rem;
+    width: 4rem;
     margin: 4rem auto;
 }
-.pesoSymbol{
+
+.pesoSymbol {
     display: block;
     position: absolute;
     top: -5px;
     right: 10px;
 }
-.inputNumber{
+
+.inputNumber {
     display: block;
     width: 40vw;
     padding: 10px;
@@ -77,11 +105,22 @@
     background-color: #f9f9f9;
     box-sizing: border-box;
     margin: 0 auto;
-    &:focus{
-        outline: none;
-    }
+
+    /* Quitar las flechas */
+    -moz-appearance: textfield; /* Firefox */
 }
-.AddCategoryWindow{
+
+.inputNumber::-webkit-outer-spin-button,
+.inputNumber::-webkit-inner-spin-button {
+    -webkit-appearance: none; /* Chrome, Safari */
+    margin: 0;
+}
+
+.inputNumber:focus {
+    outline: none;
+}
+
+.AddCategoryWindow {
     display: flex;
     position: absolute;
     width: 100vw;
@@ -89,58 +128,79 @@
     top: 0;
     z-index: 1100;
 }
+
+.title {
+    width: 7rem;
+}
+
+/* Mensaje de error */
+.error {
+    color: red;
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    text-align: center;
+}
 </style>
+
 <script setup>
 import { ref } from "vue";
-import AddCategoryComp from "./AddCategoryComp.vue"
+import AddCategoryComp from "./AddCategoryComp.vue";
 import { showName } from "@/data/selectedComponent";
 import { addTransactionExpense, showTransactionExpense } from "@/data/transactions";
-const expense = ref(0)
-const component = ref("")
-const isShown = ref(false)
-const id = ref(0)
-const date = ref({})
-function changeWindow(){
-    isShown.value = !isShown.value
+
+const expense = ref(0);
+const component = ref("");
+const isShown = ref(false);
+const id = ref(0);
+const date = ref({});
+const errorMessage = ref(""); // Nueva variable para manejar mensajes de error
+
+function changeWindow() {
+    isShown.value = !isShown.value;
 }
-function updateCategory(){
+
+function updateCategory() {
     console.log("confirmed");
-    component.value = showName()
+    component.value = showName();
 }
-function handleSend(){
-    id.value = generateUniqueId()
-    date.value = getFormattedDateTime()
-    addTransactionExpense(expense.value, component.value, date.value.formattedString, id.value)
-    console.log("sent")
-    console.log(showTransactionExpense())
+
+function handleSend() {
+    // Validar si los campos están llenos
+    if (!component.value || expense.value <= 0) {
+        errorMessage.value = "Por favor, selecciona una categoría y añade un valor de gasto válido."; // Mensaje de error
+        return;
+    }
+
+    id.value = generateUniqueId();
+    date.value = getFormattedDateTime();
+    addTransactionExpense(expense.value, component.value, date.value.formattedString, id.value);
+    console.log("sent");
+    console.log(showTransactionExpense());
+    
+    // Reiniciar el error después de enviar
+    errorMessage.value = "";
 }
 
 function getFormattedDateTime() {
     const now = new Date();
-
     const day = String(now.getDate()).padStart(2, '0');
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const year = String(now.getFullYear()).slice(-2);
-
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
 
     const formattedDateTime = `${day}/${month}/${year} ${hours}:${minutes}`;
     return {
-        dateObject: now,          
-        formattedString: formattedDateTime
+        dateObject: now,
+        formattedString: formattedDateTime,
     };
 }
 
 function generateUniqueId() {
     const timestamp = Date.now();
- 
     const randomNum = Math.floor(Math.random() * 100000);
-    
     const randomString = randomNum.toString().padStart(5, '0');
-    
     const uniqueId = `${timestamp}-${randomString}`;
-    
     return uniqueId;
 }
 </script>

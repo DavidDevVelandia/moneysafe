@@ -40,18 +40,25 @@
     border-radius: 20px;
     margin: 1rem auto;
 }
-
+.confirm:hover{
+  background-color: #5e51d4;
+}
+.confirm:active{
+  background-color: #8076d8;
+}
 .interest-container {
     display: flex;
     margin: 200px auto;
     width: 80vw;
     justify-content: space-between;
 }
-.results{
-    display: block;
-    width: rem;
-    margin: 0 auto;
+.results {
+  display: block;
+  width: 100%; /* Cambia de fit-content a 100% para abarcar todo el contenedor */
+  text-align: center; /* Centra el texto dentro del elemento */
+  margin: 1rem auto; /* Asegúrate de que el margen superior e inferior se mantengan */
 }
+
 #input-container-budget,
 #input-container-payment,
 #input-container-interestrate {

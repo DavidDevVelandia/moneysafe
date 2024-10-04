@@ -1,6 +1,5 @@
 let component = {
     name: "",
-    image: "",
     id: 0
 }
 
@@ -11,13 +10,11 @@ export function changeName(prop) {
     }
 
     const hasValidName = Object.prototype.hasOwnProperty.call(prop, 'name');
-    const hasValidImage = Object.prototype.hasOwnProperty.call(prop, 'image');
     const hasValidId = Object.prototype.hasOwnProperty.call(prop, 'id');
 
     // Validar todas las propiedades
-    if (hasValidName && hasValidImage && hasValidId) {
+    if (hasValidName && hasValidId) {
         component.name = prop.name;
-        component.image = prop.image;
         component.id = prop.id;
 
         console.log(component.id+" "+component.name)

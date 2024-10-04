@@ -5,11 +5,10 @@
             <div class="categories-container">
                 <button v-for="category in categories" :key="category.id" class="item" @click="handleClick(category, $event)">
                     <p>{{ category.name }}</p> 
-                    <p>{{ category.image }}</p>
                 </button>
             </div>
             <CategoryIncomeComp v-if="categoryIsAdded" @category-added="refreshCategories"/>
-            <button @click.prevent="confirm">confirm</button>
+            <button @click.prevent="confirm">confirmar</button>
         </div>
     </div>
     </template>
@@ -25,8 +24,8 @@
     }
     .item{
         display: block;
-        width: 4rem;
-        height: 4rem;
+        width: 5rem;
+        height: 5rem;
     }
     .window{
         box-sizing: border-box;
@@ -51,7 +50,6 @@
         max-height: 400px;
         overflow-y: scroll;
         width: 100%;
-        background-color: #787680;
     }
     </style>
     <script setup>

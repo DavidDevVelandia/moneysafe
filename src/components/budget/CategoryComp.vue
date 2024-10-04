@@ -2,7 +2,7 @@
     <div class="form">
         <input type="text" v-model="name" class="inp">
 
-        <button class="button__add inp" @click.prevent="handleClick" >Add</button>
+        <button class="button__add inp" @click.prevent="handleClick">Añadir</button>
     </div>  
 </template>
 <style lang="scss" scoped>

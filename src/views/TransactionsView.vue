@@ -1,104 +1,62 @@
 <template>
-  <div class="container">
-    <nav class="tabs">
-      <button 
-        v-for="tab in tabs" 
-        :key="tab" 
-        :class="{ active: selectedTab === tab }" 
-        @click="selectedTab = tab"
-      >
-        {{ tab }}
-      </button>
-    </nav>
-
-    <div class="filter-options">
-      <button 
-        v-for="filter in filters" 
-        :key="filter" 
-        :class="{ active: selectedFilter === filter }" 
-        @click="selectedFilter = filter"
-      >
-        {{ filter }}
-      </button>
-    </div>
-
-    <div class="content">
-      <GeneralChart v-if="selectedTab === 'General'" :filter="selectedFilter" />
-      <ExpenseList v-if="selectedTab === 'Gastos'" :filter="selectedFilter" />
-      <IncomeList v-if="selectedTab === 'Ingresos'" :filter="selectedFilter" />
-    </div>
+  <div class="menu">
+    <button @click="showExpensesView" class="btn">Gastos</button>
+    <Button @click="showIncomesView" class="btn">Ingresos</Button>
   </div>
+  <div  class="graphs">
+    <ExpensesHistoryComp v-if="showExpenses"/>
+    <IncomesHistoryComp v-if="showIncomes"/>
+  </div>
+  
 </template>
+<style lang="scss" scoped>
+@import './../scss/colors';
+.menu{
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 6rem;
+  width: 100%;
+}
+.btn{
+  height: 3rem;
+  width: 6rem;
+  color: $md-theme-light-on-primary;
+  background-color: $md-theme-light-primary;
+  border: none;
+  border-radius: 30px;
+}
+.btn:hover{
+  background-color: #5e51d4;
+}
+.btn:active{
+  background-color: #8076d8;
+}
+@media (min-width: 581px) {
+  .graphs{
+  margin: 2rem auto;
+  width: 70vw;
+  border-radius: 20px;
+  border-color: $md-theme-light-secondary-container;
+  border-style: solid;
+}
+}
 
+</style>
 <script setup>
 import { ref } from 'vue';
-import GeneralChart from '@/components/transactionsHistory/GeneralChart.vue';
-import ExpenseList from '@/components/transactionsHistory/ExpenseList.vue';
-import IncomeList from '@/components/transactionsHistory/IncomeList.vue';
+import ExpensesHistoryComp from '@/components/Transactions/ExpensesHistoryComp.vue';
+import IncomesHistoryComp from '@/components/Transactions/IncomesHistoryComp.vue';
 
-const selectedTab = ref('General');
-const selectedFilter = ref('año');
+const showExpenses = ref(true)
+const showIncomes = ref(false)
 
-const tabs = ['General', 'Gastos', 'Ingresos'];
-const filters = ['año', 'mes', 'semana', 'día'];
+function showExpensesView(){
+  showExpenses.value = true
+  showIncomes.value = false
+}
+function showIncomesView(){
+  showExpenses.value = false
+  showIncomes.value = true
+}
+
 </script>
-
-<style lang="scss">
-@import "@/scss/_colors.scss";
-
-.container {
-  margin-top: 10rem;
-  padding: 1rem;
-  background-color: $md-theme-light-surface;
-  border-radius: 10px;
-}
-
-.tabs {
-  display: flex;
-  justify-content: space-around;
-  background-color: $md-theme-light-primary-container;
-  border-radius: 10px;
-  padding: 0.5rem;
-
-  button {
-    flex: 1;
-    padding: 0.5rem;
-    background: transparent;
-    border: none;
-    font-weight: bold;
-    color: $md-theme-light-on-primary-container;
-    text-transform: uppercase;
-    cursor: pointer;
-
-    &.active {
-      color: $md-theme-light-primary;
-      border-bottom: 2px solid $md-theme-light-primary;
-    }
-  }
-}
-
-.filter-options {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 1rem;
-
-  button {
-    flex: 1;
-    padding: 0.5rem;
-    background: transparent;
-    border: none;
-    color: $md-theme-light-outline;
-    cursor: pointer;
-
-    &.active {
-      color: $md-theme-light-primary;
-      border-bottom: 2px solid $md-theme-light-primary;
-      font-weight: bold;
-    }
-  }
-}
-
-.content {
-  margin-top: 1rem;
-}
-</style>

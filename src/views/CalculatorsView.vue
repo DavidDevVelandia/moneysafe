@@ -26,8 +26,12 @@
     text-decoration: none;
     font-size: 2.4vh;
 }
+
 .router:hover{
-    background-color: $md-theme-light-secondary;
+  background-color: #6154db;
+}
+.router:active{
+  background-color: #8076d8;
 }
 </style>
 <script setup>

@@ -1,46 +1,41 @@
-import { ref } from "vue"
-const categories = ref([
-    {
-        name: "Comida",
-        image: "not now",
-        id: generateUniqueId()
-    },
-    {
-        name: "Servicios",
-        image: "not now",
-        id: generateUniqueId()
-    },
-    {
-        name: "add",
-        image: "not now",
-        id: generateUniqueId()
-    }
-]);
+import { ref, watch } from "vue";
 
-function createCategory(name, image){
+// Cargar categorías de localStorage o usar valores por defecto
+const savedCategories = JSON.parse(localStorage.getItem('categories')) || [
+    { name: "Comida", id: generateUniqueId() },
+    { name: "Servicios", id: generateUniqueId() },
+    { name: "add", id: generateUniqueId() }
+];
+
+const categories = ref(savedCategories);
+
+function createCategory(name){
     return {
         name: name,
-        image: image,
         id: generateUniqueId()
     }
 }
 
-export function AddCategory(name, image){
-    categories.value.splice(categories.value.length -1, 0, createCategory(name, image))
+export function AddCategory(name){
+    categories.value.splice(categories.value.length - 1, 0, createCategory(name));
+    saveCategoriesToLocalStorage(); // Guardar en localStorage
 }
 
 export function ShowCategories(){
-    return categories
+    return categories;
+}
+
+// Guardar las categorías en localStorage
+function saveCategoriesToLocalStorage() {
+    localStorage.setItem('categories', JSON.stringify(categories.value));
 }
 
 function generateUniqueId() {
     const timestamp = Date.now();
- 
     const randomNum = Math.floor(Math.random() * 100000);
-    
     const randomString = randomNum.toString().padStart(5, '0');
-    
-    const uniqueId = `${timestamp}-${randomString}`;
-    
-    return uniqueId;
+    return `${timestamp}-${randomString}`;
 }
+
+// Observar los cambios en la lista de categorías para guardarlos automáticamente
+watch(categories, saveCategoriesToLocalStorage, { deep: true });

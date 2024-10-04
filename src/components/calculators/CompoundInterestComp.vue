@@ -60,9 +60,11 @@
 }
 .results {
   display: block;
-  width: rem;
-  margin: 0 auto;
+  width: 100%; /* Cambia de fit-content a 100% para abarcar todo el contenedor */
+  text-align: center; /* Centra el texto dentro del elemento */
+  margin: 1rem auto; /* Asegúrate de que el margen superior e inferior se mantengan */
 }
+
 .interest-container.input-container {}
 #input-container-budget {
   width: 20rem;
@@ -97,7 +99,12 @@ body {
   width: 60vw;
   margin-bottom: 5rem;
 }
-
+.confirm:hover{
+  background-color: #5e51d4;
+}
+.confirm:active{
+  background-color: #8076d8;
+}
 .input {
   width: 100%;
   padding: 10px;

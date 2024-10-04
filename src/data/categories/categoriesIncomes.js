@@ -1,41 +1,40 @@
-import { ref } from "vue"
-const categoriesIncomes = ref([
-    {
-        name: "Trabajo",
-        image: "not now",
-        id: generateUniqueId()
-    },
-    {
-        name: "add",
-        image: "not now",
-        id: generateUniqueId()
-    }
-]);
+import { ref, watch } from "vue";
 
-function createCategory(name, image){
+// Cargar categorías de ingresos de localStorage o usar valores por defecto
+const savedCategoriesIncomes = JSON.parse(localStorage.getItem('categoriesIncomes')) || [
+    { name: "Trabajo", id: generateUniqueId() },
+    { name: "add", id: generateUniqueId() }
+];
+
+const categoriesIncomes = ref(savedCategoriesIncomes);
+
+function createCategory(name){
     return {
         name: name,
-        image: image,
         id: generateUniqueId()
     }
 }
 
-export function AddCategoryIncome(name, image){
-    categoriesIncomes.value.splice(categoriesIncomes.value.length -1, 0, createCategory(name, image))
+export function AddCategoryIncome(name){
+    categoriesIncomes.value.splice(categoriesIncomes.value.length - 1, 0, createCategory(name));
+    saveCategoriesIncomesToLocalStorage(); // Guardar en localStorage
 }
 
 export function ShowCategoriesIncomes(){
-    return categoriesIncomes
+    return categoriesIncomes;
+}
+
+// Guardar las categorías de ingresos en localStorage
+function saveCategoriesIncomesToLocalStorage() {
+    localStorage.setItem('categoriesIncomes', JSON.stringify(categoriesIncomes.value));
 }
 
 function generateUniqueId() {
     const timestamp = Date.now();
- 
     const randomNum = Math.floor(Math.random() * 100000);
-    
     const randomString = randomNum.toString().padStart(5, '0');
-    
-    const uniqueId = `${timestamp}-${randomString}`;
-    
-    return uniqueId;
+    return `${timestamp}-${randomString}`;
 }
+
+// Observar los cambios en la lista de categorías de ingresos para guardarlos automáticamente
+watch(categoriesIncomes, saveCategoriesIncomesToLocalStorage, { deep: true });
