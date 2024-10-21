@@ -17,7 +17,8 @@
 
     <button @click.prevent="handleClick" class="confirm">Confirm</button>
 
-    <p v-if="result !== null" class="results">El valor final es: ${{ result.toFixed(2) }}</p>
+    <p v-if="result !== null" class="results">El valor final a pagar es: ${{ (result + budget).toFixed(2) }}</p>
+
     <p v-if="error" class="results">{{ error }}</p>
 </template>
 <style lang="scss" scoped>
@@ -25,7 +26,7 @@
 .title {
     display: block;
     width: 12.5rem;
-    margin: 5rem auto;
+    margin: 2rem auto;
 }
 
 .confirm{
@@ -63,7 +64,7 @@
 #input-container-payment,
 #input-container-interestrate {
     width: 20rem;
-    margin: 0 auto 5rem;
+    margin: 0 auto 4rem;
 }
 
 #initialBudget,

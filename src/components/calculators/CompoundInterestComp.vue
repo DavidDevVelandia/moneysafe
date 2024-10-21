@@ -1,9 +1,11 @@
 <template>
   <h1 class="title">Interés compuesto</h1>
+  
   <div class="input-container" id="input-container-budget">
       <input type="number" id="initialBudget" class="input" placeholder=" " required v-model.number="budget">
       <label for="initialBudget" class="input-label">¿Cuánto es el presupuesto inicial? $</label>
   </div>
+  
   <div class="interest-container">
       <div class="input-container">
           <input type="number" id="interestRate" class="input" placeholder=" " required v-model.number="interest_rate">
@@ -27,9 +29,14 @@
       <input type="number" id="paymentPeriod" class="input" placeholder=" " required v-model.number="period">
       <label for="paymentPeriod" class="input-label">¿Cuánto es el periodo de pago en años?</label>
   </div>
-
+  
   <button @click.prevent="handleClick" class="confirm">Confirm</button>
-  <p v-if="result !== null" class="results">El valor final es: ${{ result.toFixed(2) }}</p>
+  
+  <p v-if="result !== null" class="results">
+    El valor final es: ${{ result.toFixed(2) }} <br>
+    Pagando ${{ periodic_payment.toFixed(2) }} {{ period_label }} adicional.
+  </p>
+  
   <p v-if="error" class="results">{{ error }}</p>
 </template>
 
@@ -38,7 +45,7 @@
 .title {
   display: block;
   width: 16rem;
-  margin: 5rem auto;
+  margin: 2rem auto;
 }
 .interest-container {
   display: flex;
@@ -60,12 +67,11 @@
 }
 .results {
   display: block;
-  width: 100%; /* Cambia de fit-content a 100% para abarcar todo el contenedor */
-  text-align: center; /* Centra el texto dentro del elemento */
-  margin: 1rem auto; /* Asegúrate de que el margen superior e inferior se mantengan */
+  width: 100%;
+  text-align: center;
+  margin: 1rem auto;
 }
 
-.interest-container.input-container {}
 #input-container-budget {
   width: 20rem;
   margin: 0 auto;
@@ -164,6 +170,8 @@ const period = ref(0);
 const interest_period = ref("");
 const result = ref(null);
 const error = ref("");
+const periodic_payment = ref(0);
+const period_label = ref("");
 
 const periods_per_year = {
   "mensual": 12,
@@ -176,6 +184,8 @@ const periods_per_year = {
 function handleClick() {
   result.value = null;
   error.value = "";
+  periodic_payment.value = 0;
+  period_label.value = "";
 
   if (budget.value <= 0) {
       error.value = "El presupuesto inicial debe ser mayor que 0.";
@@ -197,9 +207,34 @@ function handleClick() {
       return;
   }
 
+  // Cálculo de interés compuesto
   const n = periods_per_year[interest_period.value];
   const r = interest_rate.value / 100 / n;
   const t = period.value * n;
   result.value = budget.value * Math.pow((1 + r), t);
+
+  // Cálculo del pago por período
+  switch (interest_period.value) {
+    case "mensual":
+      periodic_payment.value = result.value / (period.value * 12);
+      period_label.value = "mensuales";
+      break;
+    case "bimestral":
+      periodic_payment.value = result.value / (period.value * 6);
+      period_label.value = "bimestrales";
+      break;
+    case "trimestral":
+      periodic_payment.value = result.value / (period.value * 4);
+      period_label.value = "trimestrales";
+      break;
+    case "semestral":
+      periodic_payment.value = result.value / (period.value * 2);
+      period_label.value = "semestrales";
+      break;
+    case "anual":
+      periodic_payment.value = result.value / period.value;
+      period_label.value = "anuales";
+      break;
+  }
 }
 </script>
